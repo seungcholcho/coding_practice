@@ -78,40 +78,39 @@ i+1 < hint[i][j] ≤ n (j>0)
 def solution1(cost, hint):
     sum_list = []
     
-    is_hint_bought = [0] * len(cost) # is_hint_bought[i], 스테이지 i+1 에서 힌트 번들 구매 여부. (i=0 부터)
-    hint_counter = [0] * len(cost) # hint_counter[i], 스테이지 i+1 에서 사용 가능한 힌트 개수. (i=0 부터)
-    sum_hint_cost = 0 #지불한 힌트 번들 금액
-    
-    
-    for i in range(len(hint[0])):
-        sum_hint_cost = sum_hint_cost + hint[i+1]
-        hint_counter[[hint[i+1]]] = hint_counter[[hint[i+1]]] + 1
-    
-    sum = 0
-    for i in range(len(cost)):
-        sum = sum + cost[i][hint_counter[i]]
-    
-    answer = 0
-    return answer
-'''
-what do I need now?
-- 각 스테이지 에서의 hint 번들 구매 여부
-- 각 경우의 수 별 사용가능한 hint 개수
-- 모든 경우의 수를 0과 1로 표현한 리스트
-'''
-'''
+    n = len(cost)
+    bundle_count = n - 1              # 번들 개수 = 자리 수
+    cases = []
 
-cost = [[160, 140, 120, 110, 60],
-        [290, 270, 260, 120, 10], 
-        [160, 130, 120, 60, 20], 
-        [160, 120, 80, 70, 20], 
-        [110, 70, 60, 30, 20]]
+    for c in range(2 ** bundle_count):    # 조합 숫자: 0 ~ 2^(n-1) - 1
+        binary = []                       # 조합마다 새 리스트
+        temp = c
+        for j in range(bundle_count):     # 자리 수 고정
+            binary.append(temp % 2)       # j번째 번들 구매 여부
+            temp = temp // 2
+        cases.append(binary)       
     
-hint = [[40, 2, 3], 
-        [40, 5, 3], 
-        [20, 5, 4], 
-        [50, 5, 5]]
+    for i in cases:
+        is_hint_bought = i
         
-
+        hint_counter = [0] * len(cost) # hint_counter[i], 스테이지 i+1 에서 사용 가능한 힌트 개수. (i=0 부터)
+        sum_hint_cost = 0 #지불한 힌트 번들 금액
+        sum_cost = 0
+        for j in range(len(is_hint_bought)):
+            if is_hint_bought[j] == 1:
+                sum_hint_cost += hint[j][0]
+                
+                for k in range(len(hint[0])-1):
+                    ticket = hint[j][k+1]
+                    stage_idx = ticket -1
+                    hint_counter[stage_idx] += 1 
+                    if hint_counter[stage_idx] > len(is_hint_bought):
+                        hint_counter[stage_idx] =  len(is_hint_bought)
+            
+        for j in range(len(cost)):
+                sum_cost += cost[j][hint_counter[j]]
+                
+        sum_list.append(sum_hint_cost+sum_cost)
     
-'''
+    answer = min(sum_list)
+    return answer
