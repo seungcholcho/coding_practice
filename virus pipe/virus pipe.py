@@ -74,91 +74,43 @@ def solution1(n, infection, edges, k):
             gate_combination.append(temp)
         is_repeating = False
 
-    infected_combination = []
 
-    for combination in gate_combination:
+    graph = [[] for _ in range(n + 1)]
+    for x, y, t in edges:
+        graph[x].append((y,t))
+        graph[y].append((x,t))
+        
+
+    from collections import deque
+
+
+    total_list = []
+
+    for combination in gate_combination:   
         is_infected = [0] * (n+1)
-        is_infected[infection] = 1
-        for gate_opened in combination:
-            for edge in edges:
-                current_node_number = edge[0]
-                if gate_opened == edge[2] and is_infected[current_node_number] == 1:
-                    is_infected[edge[1]] = 1       
-        infected_combination.append(is_infected)  
+        is_infected[infection] = 1  
+            
+        q = deque([infection])
+        visited = [False] * (n+1)
+        
+        #시작 노드 설정
 
-    total = []
-    for i in infected_combination:
-        sum = 0
-        for j in i:
-            sum += j    
-        total.append(sum)           
-    answer = max(total)
-    
+        #문 열기
+        for opened_gate in combination:
+            for i in range(0,len(is_infected)):
+                if is_infected[i] == 1:
+                    visited[i] = True
+                    q.append(i)
+                    
+            while q:
+                node = q.popleft()
+                is_infected[node] = 1
+                for nxt, gate_type in graph[node]:
+                    if (visited[nxt] != True) and (gate_type == opened_gate):
+                        visited[nxt] = True
+                        q.append(nxt)
+            total_list.append(sum(is_infected))
+        answer = max(total_list)
+        
     return answer
 
-
-n = 10
-infection = 1
-edges = [[1, 2, 1], [1, 3, 1], [1, 4, 3], [1, 5, 2], [5, 6, 1], [5, 7, 1], [2, 8, 3], [2, 9, 2], [9, 10, 1]]
-k = 2
-
-gate_combination_with_repeat = []
-gate_combination = []
-
-for c in range(3 ** k):
-    combination = []
-    temp = c
-    for i in range(k):
-        combination.append(temp % 3 + 1)
-        temp = temp // 3
-    gate_combination_with_repeat.append(combination)
-
-for c in range(0,len(gate_combination_with_repeat)):
-    is_repeating = False
-    temp = gate_combination_with_repeat[c]
-    for i in range(len(temp)-1):
-        if temp[i] == temp[i+1]:
-            is_repeating = True
-    if is_repeating == False:
-        gate_combination.append(temp)
-    is_repeating = False
-
-
-graph = [[] for _ in range(n + 1)]
-for x, y, t in edges:
-    graph[x].append((y,t))
-    graph[y].append((x,t))
-    
-
-from collections import deque
-
-
-total_list = []
-
-for combination in gate_combination:
-    print('door open', combination)
-   
-    is_infected = [0] * (n+1)
-    is_infected[infection] = 1  
-        
-    q = deque([infection])
-    visited = [False] * (n+1)
-    
-    #시작 노드 설정
-
-    #문 열기
-    for opened_gate in combination:
-        for i in range(0,len(is_infected)):
-            if is_infected[i] == 1:
-                visited[i] = True
-                q.append(i)
-                
-        while q:
-            node = q.popleft()
-            is_infected[node] = 1
-            for nxt, gate_type in graph[node]:
-                if (visited[nxt] != True) and (gate_type == opened_gate):
-                    visited[nxt] = True
-                    q.append(nxt)
-        total_list.append(sum(is_infected))
-print(max(total_list))

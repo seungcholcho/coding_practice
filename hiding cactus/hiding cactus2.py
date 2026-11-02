@@ -4,10 +4,13 @@ def sliding_min(list, w):
     dq = deque()
     min_list = []
     for i in range(len(list)):
-        dq.append(list[i])
-        if(len(dq)==w): #덱이 가득 차면 최소값 추가하고 가장 좌측 pop.
-            min_list.append(min(dq))
+        while(dq and (list[i] <= list[dq[-1]])):
+            dq.pop()
+        dq.append(i)
+        if(i - dq[0] >= w):
             dq.popleft()
+        if (i >= w-1):
+            min_list.append(list[dq[0]])
     return(min_list)
 
 def list_transition(arr):
@@ -27,7 +30,7 @@ def find_max(arr):
             if cur_val > max:
                 max = cur_val
                 x, y = i, j
-    return([y, x])
+    return([x, y])
 
 def solution(m, n, h, w, drops):
     field = [[len(drops)+1] * n for _ in range(m)]
