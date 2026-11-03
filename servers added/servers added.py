@@ -74,7 +74,6 @@ import math
 
 def solution(players, m, k):
     servers_added = [0] * 24
-    server_capcity = m-1
     for time in range(0,24):
         server_capcity = m -1
         for i in range(time-k+1, time+1):
@@ -86,11 +85,6 @@ def solution(players, m, k):
             servers_required = math.ceil((players[time]-server_capcity)/m)
             servers_added[time] = servers_required
         server_capcity = m-1
-        for i in range(time-k+1, time+1):
-            if i < 0:
-                pass
-            else:
-                server_capcity += servers_added[i]*m
     answer = sum(servers_added)
     return answer
 
