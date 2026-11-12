@@ -51,10 +51,6 @@ dist_node = 3
 
 
 '''
-def printlist(arr):
-    for r in arr:
-        print(r)
-    print("-------------")
 def solution(dist_limit, split_limit):
     i,j = 0, 0
     combinatinon = []
@@ -65,9 +61,8 @@ def solution(dist_limit, split_limit):
             j+=1
         j=0    
         i+=1
-    
-    leaf_list = []
 
+    leaf_list = []
     for c in range(0,len(combinatinon)):
         depth, dist_node_left = 0, dist_limit
         i, j = combinatinon[c][0], combinatinon[c][1] #child가 2인 층을 i개, 3인 층을 j개.
@@ -78,7 +73,7 @@ def solution(dist_limit, split_limit):
         else:
             tree.append([0,0,0,1])
             
-        if tree[-1][1] == 0 & tree[-1][2] == 0:
+        if tree[-1][1] == 0 and tree[-1][2] == 0:
             leaf_list.append(1)
             break
         
@@ -115,7 +110,7 @@ def solution(dist_limit, split_limit):
         leaf_list.append(total_leaf_nodes)
  
             
-    answer = min(leaf_list)
+    answer = max(leaf_list)
     return answer
 
 
