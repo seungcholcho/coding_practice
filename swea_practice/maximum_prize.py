@@ -64,25 +64,3 @@ for test_case in range(1, T + 1):
     answer = max(digit_list)
     print(f"#{test_case} {answer}")
     # ///////////////////////////////////////////////////////////////////////////////////
-'''
-0: 4 5 6 7 8 9
-1: 9 5 6 7 8 4
-2: 9 8 6 7 5 4
-3: 9 8 7 6 5 4
-4: 9 8 7 6 4 5
-5: 9 8 7 6 5 4
-6: 9 8 7 6 4 5
-7: 9 8 7 6 5 4
-8: 9 8 7 6 4 5
-9: 9 8 7 6 5 4
-0: 9 8 7 6 4 5
-
-for i = 0,
-    if digits[i] == max(digits):
-        i++
-    if digits[i] < max(digits):
-        temp = digits[i]
-        digits[i] = digits[max(max_index)]
-        digits[max(max_index)] = temp
-        
-'''
